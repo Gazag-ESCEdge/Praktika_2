@@ -1,0 +1,22 @@
+:root {
+    --color-transp:rgba(0, 0, 0, 0.12);
+  
+    --color-white: #ffffff;
+    --color-gray-light: #F4F6F7;
+    --color-gray-mint: #F4FBF9;
+    --color-gray: #5F6F73;
+    --color-teal:#00A8A8;
+    --color-green:#3E8E41;
+    --color-orange:#E57128;
+    --color-black: #000000;
+  
+    --color-primary: #b0254a;
+    --color-primary-dark: #921e31;
+    --color-success: #01bd78;
+    --color-error: #d40019;
+
+
+
+    --border-rad:16px;
+    --border-radmin:8px;
+  }
