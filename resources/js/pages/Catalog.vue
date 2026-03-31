@@ -1,5 +1,7 @@
 <template>
     <Header></Header>
+    <div class="top-filled"></div>
+
     <div>
     <h1>Магазин фильтров воды</h1>
     <p>Чистая вода — залог здоровья 💧</p>
@@ -14,25 +16,25 @@
     </div>
     
     </div>
+
+    <Footer></Footer>
 </template>
     
+
 <script setup>
     import Header from "../components/Header.vue"
+    import Footer from "../components/Footer.vue"
 </script>
 
 <script>    
     export default {
-    data(){
-    return{
-    products:[]
-    }
-    },
-    mounted(){
-    fetch('/api/products')
-    .then(res=>res.json())
-    .then(data=>{
-    this.products=data
-    })
-    }
+        data(){
+            return{products:[]}
+            },
+        mounted(){
+            fetch('/api/products').then(res=>res.json()).then(data=>{
+                this.products=data
+            })
+        }
     }
 </script>

@@ -9,6 +9,7 @@ import Payment from '../pages/Payment.vue'
 import Shops from '../pages/Shops.vue'
 import Service from '../pages/Service.vue'
 import ReviewList from '../pages/ReviewList.vue'
+import Profile from '../pages/Profile.vue'
 
 import NotFound from '../pages/NotFound.vue'
 
@@ -22,6 +23,7 @@ const routes = [
     { path: '/magazin', component: Shops },
     { path: '/uslugi', component: Service },
     { path: '/statii', component: ReviewList },
+    { path: '/profil', component: Profile },
 
     //404 должна быть всегда последней!
     { path: '/:pathMatch(.*)*', component: NotFound }
