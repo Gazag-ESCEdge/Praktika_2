@@ -14,6 +14,8 @@ Route::get('/test', function () {
 });
 
 Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/hit_limit', [ProductController::class, 'hit_limit']);
+Route::get('/products/sale_limit', [ProductController::class, 'sale_limit']);
 Route::get('/products/{article}', [ProductController::class, 'show']);
 
 Route::get('/cart/{user}', [CartController::class, 'index']);
