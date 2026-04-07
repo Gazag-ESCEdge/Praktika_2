@@ -1,0 +1,360 @@
+<!--<template>
+  <Header></Header>
+    <div>
+    
+    <h1>Каталог</h1>
+    
+    <div v-for="product in products" :key="product.article">
+    
+        <h3>
+        <router-link :to="product.article">
+          {{ product.name }}
+        </router-link>
+      </h3>
+    
+      <p>{{ product.price }} ₽</p>
+    
+      <button @click="addToCart(product)">
+        В корзину
+      </button>
+    
+    </div>
+    
+    </div>
+
+    <Footer></Footer>
+</template>
+    
+
+<script setup>
+  import Header from "../components/Header.vue"
+  import Footer from "../components/Footer.vue"
+</script>
+
+<script>
+  export default {
+        data(){
+            return{products:[]}
+            },
+        mounted(){
+            fetch('/api/products/'+p).then(res=>res.json()).then(data=>{
+                this.products=data
+            })
+        }
+    }
+</script>
+
+<script>
+export default {
+    
+    data(){
+    return{
+    products:[]
+    }
+    },
+    
+    mounted(){
+    fetch('/api/products')
+    .then(r=>r.json())
+    .then(data=>{
+      this.products = data
+    })
+    },
+    
+    methods:{
+    addToCart(product){
+    
+    fetch('/api/cart/add',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        user_id: 1,
+        product_article: product.article,
+        quantity: 1
+      })
+    })
+    
+    .then(()=> alert('Добавлено в корзину'))
+    
+    }
+    }
+    
+    }
+</script>
+
+
+
+
+
+
+
+
+<template>
+  <div class="product-page">
+
+      <div v-if="loading" class="loading">
+          Загрузка...
+      </div>
+
+      <div v-else-if="error" class="error">
+          <h2>Товар не найден</h2>
+          <router-link to="/">Вернуться в каталог</router-link>
+      </div>
+
+      <div v-else class="product-container">
+          <div class="image-section">
+              <img
+                  :src="product.image1"
+                  :alt="product.name"
+              >
+          </div>
+
+          <div class="info-section">
+              <div class="article">
+                  Артикул: {{ product.article }}
+              </div>
+
+              <h1 class="title">
+                  {{ product.name }}
+              </h1>
+
+              <div class="rating-section">
+                  <img
+                      :src="getStarsImage(product.rating)"
+                      alt="Рейтинг"
+                      class="stars"
+                  >
+
+                  <span>
+                      ({{ product.reviews_num || 0 }} отзывов)
+                  </span>
+              </div>
+
+              <div class="price">
+                  {{ product.price }} ₽
+              </div>
+
+              <div class="labels">
+                  <span v-if="product.hit" class="label hit">
+                      Хит
+                  </span>
+
+                  <span v-if="product.for_order" class="label order">
+                      На заказ
+                  </span>
+
+                  <span v-if="product.sale" class="label sale">
+                      Скидка
+                  </span>
+              </div>
+
+              <div class="description">
+                  <h3>Описание</h3>
+                  <p>
+                      {{ product.description || 'Описание отсутствует' }}
+                  </p>
+              </div>
+
+              <button class="add-to-cart-btn" @click="addToCart">
+                  Добавить в корзину
+              </button>
+          </div>
+      </div>
+  </div>
+</template>
+
+
+<style scoped lang="scss">
+.product-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.loading,
+.error {
+    text-align: center;
+    padding: 80px 0;
+    font-size: 24px;
+}
+
+.product-container {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+}
+
+.image-section {
+    width: 450px;
+    min-width: 450px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.image-section img {
+    width: 100%;
+    display: block;
+}
+
+.info-section {
+    flex: 1;
+}
+
+.article {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #222;
+}
+
+.rating-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.stars {
+    height: 24px;
+}
+
+.price {
+    font-size: 36px;
+    font-weight: bold;
+    color: #1e88e5;
+    margin-bottom: 25px;
+}
+
+.labels {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.label {
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    color: white;
+}
+
+.hit {
+    background: #ff9800;
+}
+
+.order {
+    background: #607d8b;
+}
+
+.sale {
+    background: #e53935;
+}
+
+.description {
+    margin-bottom: 30px;
+}
+
+.description h3 {
+    margin-bottom: 10px;
+}
+
+.description p {
+    color: #555;
+    line-height: 1.6;
+}
+
+.add-to-cart-btn {
+    background: #1e88e5;
+    color: white;
+    border: none;
+    padding: 16px 30px;
+    border-radius: 12px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.add-to-cart-btn:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 900px) {
+    .product-container {
+        flex-direction: column;
+    }
+
+    .image-section {
+        width: 100%;
+        min-width: auto;
+    }
+}
+</style>
+
+
+<script setup>
+  import { ref, onMounted } from 'vue'
+  import { useRoute } from 'vue-router'
+  import axios from 'axios'
+
+  import stars0 from '../../assets/img/stars_collection/stars0.svg'
+  import stars1 from '../../assets/img/stars_collection/stars1.svg'
+  import stars2 from '../../assets/img/stars_collection/stars2.svg'
+  import stars3 from '../../assets/img/stars_collection/stars3.svg'
+  import stars4 from '../../assets/img/stars_collection/stars4.svg'
+  import stars5 from '../../assets/img/stars_collection/stars5.svg'
+
+  const route = useRoute()
+
+  const product = ref(null)
+  const loading = ref(true)
+  const error = ref(false)
+
+  const getStarsImage = (rating) => {
+      switch (rating) {
+          case 1:
+              return stars1
+          case 2:
+              return stars2
+          case 3:
+              return stars3
+          case 4:
+              return stars4
+          case 5:
+              return stars5
+          default:
+              return stars0
+      }
+  }
+
+  const addToCart = async () => {
+      try {
+          await axios.post('/api/cart', {
+              product_id: product.value.id,
+              quantity: 1
+          })
+
+          alert('Товар добавлен в корзину')
+      } catch (e) {
+          alert('Ошибка при добавлении в корзину')
+      }
+  }
+
+  onMounted(async () => {
+      try {
+          const response = await axios.get(`/api/products/${route.params.id}`)
+          product.value = response.data
+      } catch (e) {
+          error.value = true
+      } finally {
+          loading.value = false
+      }
+  })
+</script>
+
