@@ -13,6 +13,16 @@ class ProductController extends Controller
         return Product::with('category')->get();
     }
 
+    public function hit_limit()
+    {
+        return Product::where('hit', true)->take(10)->get();
+    }
+
+    public function sale_limit()
+    {
+        return Product::where('sale', true)->take(10)->get();
+    }
+
     public function show($article)
     {
         return Product::with('reviews')->findOrFail($article);
