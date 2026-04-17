@@ -6,10 +6,15 @@
             <div class="bg-img-section" :style="{ backgroundImage: 'url(' + image1 + ')' }"></div>
             <span class="art">Артикул: {{ article }}</span> <br>
             <span class="name">{{ name }}</span> <br>
-            <span class="price">{{ price }}<span> ₽</span></span> <br>
+            <span class="price">{{ price }} ₽<span v-if="price_old" class="price_old">{{price_old}} ₽</span></span> <br>
             <div class="stars-section">
-                <img :src="starsImage" alt="Рейтинг">
-                ({{ reviews_num }})
+                <img v-if="rating==0" src="../../assets/img/stars_collection/stars0.svg" alt="Рейтинг 0">
+                <img v-if="rating==1" src="../../assets/img/stars_collection/stars1.svg" alt="Рейтинг 1">
+                <img v-if="rating==2" src="../../assets/img/stars_collection/stars2.svg" alt="Рейтинг 2">
+                <img v-if="rating==3" src="../../assets/img/stars_collection/stars3.svg" alt="Рейтинг 3">
+                <img v-if="rating==4" src="../../assets/img/stars_collection/stars4.svg" alt="Рейтинг 4">
+                <img v-if="rating==5" src="../../assets/img/stars_collection/stars5.svg" alt="Рейтинг 5">
+                ({{ feedbacks_num }})
             </div>
             <div class="dopinfo-section">
                 <span v-if="hit">Хит</span>
@@ -43,7 +48,7 @@
         right: 10px;
         display: flex;
         justify-content: center;
-        background: var(--color-orange);
+        background: var(--color-gray);
         border: none;
         border-radius: var(--border-radmin);
         width: 40px;
@@ -51,7 +56,7 @@
         transition: 0.2s;
 
         &:hover{
-            background: var(--color-orange-hover);
+            background: var(--color-black);
         }
     }
     a{
@@ -83,6 +88,12 @@
     .price{
         font-size: 26px;
     }
+    .price_old{
+        font-size: 20px;
+        text-decoration: line-through;
+        color: var(--color-gray);
+        margin-left: 10px;
+    }
     .stars-section{
         display:flex;
         color: var(--color-gray);
@@ -108,46 +119,21 @@
 
 
 <script setup>
-import { computed } from 'vue'
+    const props = defineProps({
+        article:String,
+        name:String,
+        price:Number,
+        price_old:Number,
+        rating:Number,
+        feedbacks_num: Number,
+        image1:String,
+        hit:Number,
+        for_order:Number,
+        sale:Number,
+        empty:Number
+    })
 
-import stars0 from '../../assets/img/stars_collection/stars0.svg'
-import stars1 from '../../assets/img/stars_collection/stars1.svg'
-import stars2 from '../../assets/img/stars_collection/stars2.svg'
-import stars3 from '../../assets/img/stars_collection/stars3.svg'
-import stars4 from '../../assets/img/stars_collection/stars4.svg'
-import stars5 from '../../assets/img/stars_collection/stars5.svg'
-
-const props = defineProps({
-    article:String,
-    name:String,
-    price:Number,
-    rating:Number,
-    reviews_num: Number,
-    image1:String,
-    hit:Number,
-    for_order:Number,
-    sale:Number,
-    empty:Number
-})
-
-const starsImage = computed(() => {
-    switch (props.rating) {
-        case 1:
-            return stars1
-        case 2:
-            return stars2
-        case 3:
-            return stars3
-        case 4:
-            return stars4
-        case 5:
-            return stars5
-        default:
-            return stars0
+    function addToCart(x){
+        alert('Добавлено в козину!');
     }
-})
-
-function addToCart(x){
-    alert(x);
-}
 </script>

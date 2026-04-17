@@ -1,37 +1,84 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import axios from 'axios'
 
-import Home from '../pages/Home.vue'
-import Catalog from '../pages/Catalog.vue'
+import HomePage from '../pages/HomePage.vue'
+import CatalogPage from '../pages/CatalogPage.vue'
 import ProductPage from '../pages/ProductPage.vue'
-import Cart from '../pages/Cart.vue'
-import About from '../pages/About.vue'
-import Contacts from '../pages/Contacts.vue'
-import Payment from '../pages/Payment.vue'
-import Shops from '../pages/Shops.vue'
-import Service from '../pages/Service.vue'
-import ReviewList from '../pages/ReviewList.vue'
-import Profile from '../pages/Profile.vue'
+import CartPage from '../pages/CartPage.vue'
+import AboutPage from '../pages/AboutPage.vue'
+import ContactsPage from '../pages/ContactsPage.vue'
+import PaymentPage from '../pages/PaymentPage.vue'
+import ShopsPage from '../pages/ShopsPage.vue'
+import ServicePage from '../pages/ServicePage.vue'
+import ArticleListPage from '../pages/ArticleListPage.vue'
+import ArticleViewPage from '../pages/ArticleViewPage.vue'
+import ProfilePage from '../pages/ProfilePage.vue'
+import LoginPage from '../pages/LoginPage.vue'
+import RegisterPage from '../pages/RegisterPage.vue'
+import AnalysisPage from '../pages/AnalysisPage.vue'
 
-import NotFound from '../pages/NotFound.vue'
+import NotFoundPage from '../pages/NotFoundPage.vue'
 
 const routes = [
-    { path: '/', component: Home },
-    { path: '/catalog', component: Catalog },
+    { path: '/', component: HomePage },
+    { path: '/catalog', component: CatalogPage },
     { path: '/product/:id', component: ProductPage },
-    { path: '/cart', component: Cart },
-    { path: '/about', component: About },
-    { path: '/contacts', component: Contacts },
-    { path: '/payment', component: Payment },
-    { path: '/shops', component: Shops },
-    { path: '/service', component: Service },
-    { path: '/reviews', component: ReviewList },
-    { path: '/profile', component: Profile },
+    { path: '/cart', component: CartPage, meta: { requiresAuth: true } },
+    { path: '/about', component: AboutPage },
+    { path: '/contacts', component: ContactsPage },
+    { path: '/payment', component: PaymentPage },
+    { path: '/shops', component: ShopsPage },
+    { path: '/service', component: ServicePage },
+    { path: '/articles', component: ArticleListPage },
+    { path: '/articles/:id', component: ArticleViewPage },
+    { path: '/profile', component: ProfilePage, meta: { requiresAuth: true } },
+    { path: '/login', component: LoginPage },
+    { path: '/register', component: RegisterPage },
+    { path: '/analysis', component: AnalysisPage },
 
     //404 должна быть всегда последней!
-    { path: '/:pathMatch(.*)*', component: NotFound }
+    { path: '/:pathMatch(.*)*', component: NotFoundPage }
 ]
 
-export default createRouter({
+const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition
+        }
+        
+        if (to.hash) {
+            return {
+                el: to.hash,
+                behavior: 'smooth',
+                top: 80
+            }
+        }
+        
+        return { 
+            top: 0, 
+            left: 0,
+            behavior: 'smooth'
+        }
+    }
 })
+
+router.beforeEach(async (to, from, next) => {
+
+    if (!to.meta.requiresAuth) {
+        return next()
+    }
+
+    try {
+        await axios.get('/api/user')
+        next()
+    } catch (e) {
+        next({
+            path: '/login',
+            query: { redirect: to.fullPath }
+        })
+    }
+})
+
+export default router

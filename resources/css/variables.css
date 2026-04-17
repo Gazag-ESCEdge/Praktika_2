@@ -4,6 +4,7 @@
   
     --color-white: #ffffff;
     --color-gray-light: #F4F6F7;
+    --color-gray-light2: #ccc;
     --color-gray-mint: #D8F7F5;
     --color-gray: #5F6F73;
     --color-teal:#00A8A8;
@@ -22,4 +23,8 @@
 
     --border-rad:16px;
     --border-radmin:8px;
+
+
+    --InterFont:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --MontFont:'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
